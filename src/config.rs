@@ -11,7 +11,7 @@ const DEFAULT_DHCP_RANGE: &str = "192.168.42.2,192.168.42.254";
 const DEFAULT_SSID: &str = "WiFi Connect";
 const DEFAULT_ACTIVITY_TIMEOUT: &str = "0";
 const DEFAULT_UI_DIRECTORY: &str = "ui";
-const DEFAULT_LISTENING_PORT: &str = "80";
+const DEFAULT_LISTENING: &str = "0.0.0.0:80";
 
 #[derive(Clone)]
 pub struct Config {
@@ -20,7 +20,7 @@ pub struct Config {
     pub passphrase: Option<String>,
     pub gateway: Ipv4Addr,
     pub dhcp_range: String,
-    pub listening_port: u16,
+    pub listening_at: String,
     pub activity_timeout: u64,
     pub ui_directory: PathBuf,
 }
@@ -80,13 +80,13 @@ pub fn get_config() -> Config {
                 .takes_value(true),
         )
         .arg(
-            Arg::with_name("portal-listening-port")
+            Arg::with_name("portal-listening")
                 .short("o")
-                .long("portal-listening-port")
-                .value_name("listening_port")
+                .long("portal-listening")
+                .value_name("listening_at")
                 .help(&format!(
-                    "Listening port of the captive portal web server (default: {})",
-                    DEFAULT_LISTENING_PORT
+                    "Listening address of the captive portal web server (default: {})",
+                    DEFAULT_LISTENING
                 ))
                 .takes_value(true),
         )
@@ -137,11 +137,11 @@ pub fn get_config() -> Config {
     );
 
     let listening_port = matches
-        .value_of("portal-listening-port")
+        .value_of("portal-listening")
         .map_or_else(
             || {
-                env::var("PORTAL_LISTENING_PORT")
-                    .unwrap_or_else(|_| DEFAULT_LISTENING_PORT.to_string())
+                env::var("PORTAL_LISTENING")
+                    .unwrap_or_else(|_| DEFAULT_LISTENING.to_string())
             },
             String::from,
         )
@@ -161,7 +161,7 @@ pub fn get_config() -> Config {
         passphrase: passphrase,
         gateway: gateway,
         dhcp_range: dhcp_range,
-        listening_port: listening_port,
+        listening_at: listening_at,
         activity_timeout: activity_timeout,
         ui_directory: ui_directory,
     }

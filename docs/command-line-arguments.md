@@ -26,7 +26,7 @@ Command line options have environment variable counterpart. If both a command li
 
     Default: _192.168.42.1_
 
-*   **-o, --portal-listening-port** listening_port, **$PORTAL_LISTENING_PORT**
+*   **-o, --portal-listening** listening_at, **$PORTAL_LISTENING**
 
     Listening port of the captive portal web server
 

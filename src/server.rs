@@ -125,7 +125,7 @@ impl AfterMiddleware for RedirectMiddleware {
 
 pub fn start_server(
     gateway: Ipv4Addr,
-    listening_port: u16,
+    address: String,
     server_rx: Receiver<NetworkCommandResponse>,
     network_tx: Sender<NetworkCommand>,
     exit_tx: Sender<ExitResult>,
@@ -157,8 +157,6 @@ pub fn start_server(
     chain.link(Write::<RequestSharedState>::both(request_state));
     chain.link_after(RedirectMiddleware);
     chain.link_around(cors_middleware);
-
-    let address = format!("{}:{}", gateway_clone, listening_port);
 
     info!("Starting HTTP server on {}", &address);
 
