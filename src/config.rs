@@ -145,7 +145,6 @@ pub fn get_config() -> Config {
             },
             String::from,
         )
-        .parse::<u16>()
         .expect("Cannot parse listening port number");
 
     let activity_timeout = u64::from_str(&matches.value_of("activity-timeout").map_or_else(
