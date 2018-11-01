@@ -136,7 +136,7 @@ pub fn get_config() -> Config {
         String::from,
     );
 
-    let listening_port = matches
+    let listening_at = matches
         .value_of("portal-listening")
         .map_or_else(
             || {
