@@ -93,7 +93,7 @@ impl NetworkCommandHandler {
         network_tx: Sender<NetworkCommand>,
     ) {
         let gateway = config.gateway;
-        let listening_at = config.listening_at;
+        let listening_at = config.listening_at.clone();
         let exit_tx_server = exit_tx.clone();
         let ui_directory = config.ui_directory.clone();
 

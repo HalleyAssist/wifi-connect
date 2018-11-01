@@ -132,7 +132,6 @@ pub fn start_server(
     ui_directory: &PathBuf,
 ) {
     let exit_tx_clone = exit_tx.clone();
-    let gateway_clone = gateway;
     let request_state = RequestSharedState {
         gateway: gateway,
         server_rx: server_rx,
