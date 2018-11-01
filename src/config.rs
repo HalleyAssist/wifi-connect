@@ -144,7 +144,7 @@ pub fn get_config() -> Config {
                     .unwrap_or_else(|_| DEFAULT_LISTENING.to_string())
             },
             String::from,
-        )
+        );
 
     let activity_timeout = u64::from_str(&matches.value_of("activity-timeout").map_or_else(
         || env::var("ACTIVITY_TIMEOUT").unwrap_or_else(|_| DEFAULT_ACTIVITY_TIMEOUT.to_string()),
