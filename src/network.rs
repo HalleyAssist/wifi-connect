@@ -34,6 +34,7 @@ pub struct Network {
     security: String,
 }
 
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 pub struct CurrentStatus {
     apmode: bool,
     connected: bool,
