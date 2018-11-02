@@ -64,6 +64,8 @@ impl NetworkCommandHandler {
 
         let dnsmasq = start_dnsmasq(config, &device)?;
 
+        let portal_connection = None
+
         let (server_tx, server_rx) = channel();
 
         Self::spawn_server(config, exit_tx, server_rx, network_tx.clone());
@@ -79,6 +81,7 @@ impl NetworkCommandHandler {
             access_points,
             config,
             dnsmasq,
+            portal_connection,
             server_tx,
             network_rx,
             activated,
