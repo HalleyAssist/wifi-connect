@@ -90,6 +90,15 @@ macro_rules! get_request_state {
     )
 }
 
+fn output_error<E>(state: &RequestSharedState, e_kind: ErrorKind) -> IronResult<Response>
+{
+    let description = e_kind.description().into();
+    Err(IronError::new(
+        StringError(description),
+        status::InternalServerError,
+    ))
+}
+
 fn exit_with_error<E>(state: &RequestSharedState, e: E, e_kind: ErrorKind) -> IronResult<Response>
 where
     E: ::std::error::Error + Send + 'static,
@@ -182,7 +191,7 @@ fn networks(req: &mut Request) -> IronResult<Response> {
     let networks = match request_state.server_rx.recv() {
         Ok(result) => match result {
             NetworkCommandResponse::Networks(networks) => networks,
-            _ => return exit_with_error(&request_state, Err("Incorrect Command"), ErrorKind::IncorrectCommand),
+            _ => return output_error(&request_state, ErrorKind::IncorrectCommand),
         },
         Err(e) => return exit_with_error(&request_state, e, ErrorKind::RecvAccessPointSSIDs),
     };
@@ -259,7 +268,7 @@ fn current(req: &mut Request) -> IronResult<Response> {
     let networks = match request_state.server_rx.recv() {
         Ok(result) => match result {
             NetworkCommandResponse::Networks(networks) => networks,
-            _ => return exit_with_error(&request_state, Err("Incorrect Command"), ErrorKind::IncorrectCommand),
+            _ => return output_error(&request_state, ErrorKind::IncorrectCommand),
         },
         Err(e) => return exit_with_error(&request_state, e, ErrorKind::RecvAccessPointSSIDs),
     };
