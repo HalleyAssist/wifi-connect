@@ -143,6 +143,8 @@ pub fn start_server(
     router.get("/", Static::new(ui_directory), "index");
     router.get("/networks", networks, "networks");
     router.post("/connect", connect, "connect");
+    router.get("/enable_ap", enable_ap, "enable_ap");
+    router.get("/disable_ap", disable_ap, "disable_ap");
 
     let mut assets = Mount::new();
     assets.mount("/", router);
@@ -209,6 +211,26 @@ fn connect(req: &mut Request) -> IronResult<Response> {
         identity: identity,
         passphrase: passphrase,
     };
+
+    if let Err(e) = request_state.network_tx.send(command) {
+        exit_with_error(&request_state, e, ErrorKind::SendNetworkCommandConnect)
+    } else {
+        Ok(Response::with(status::Ok))
+    }
+}
+
+fn enable_ap(req: &mut Request) -> IronResult<Response> {
+    let command = NetworkCommand::EnableAp {};
+
+    if let Err(e) = request_state.network_tx.send(command) {
+        exit_with_error(&request_state, e, ErrorKind::SendNetworkCommandConnect)
+    } else {
+        Ok(Response::with(status::Ok))
+    }
+}
+
+fn disable_ap(req: &mut Request) -> IronResult<Response> {
+    let command = NetworkCommand::EnableAp {};
 
     if let Err(e) = request_state.network_tx.send(command) {
         exit_with_error(&request_state, e, ErrorKind::SendNetworkCommandConnect)

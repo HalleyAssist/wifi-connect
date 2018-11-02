@@ -15,6 +15,8 @@ use dnsmasq::start_dnsmasq;
 use server::start_server;
 
 pub enum NetworkCommand {
+    EnableAp,
+    DisableAp,
     Activate,
     Timeout,
     Exit,
@@ -60,8 +62,6 @@ impl NetworkCommandHandler {
 
         let access_points = get_access_points(&device)?;
 
-        let portal_connection = Some(create_portal(&device, config)?);
-
         let dnsmasq = start_dnsmasq(config, &device)?;
 
         let (server_tx, server_rx) = channel();
@@ -77,7 +77,6 @@ impl NetworkCommandHandler {
             manager,
             device,
             access_points,
-            portal_connection,
             config,
             dnsmasq,
             server_tx,
@@ -153,6 +152,14 @@ impl NetworkCommandHandler {
             let command = self.receive_network_command()?;
 
             match command {
+                NetworkCommand::EnableAp => {
+                    self.stop()?;
+                },
+                NetworkCommand::DisableAp => {
+                    if self.portal_connection {
+                        self.portal_connection = Some(create_portal(&self.device, &self.config)?);
+                    }
+                },
                 NetworkCommand::Activate => {
                     self.activate()?;
                 },
