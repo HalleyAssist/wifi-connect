@@ -51,7 +51,7 @@ struct NetworkCommandHandler {
     access_points: Vec<AccessPoint>,
     portal_connection: Option<Connection>,
     config: Config,
-    dnsmasq: process::Child,
+    dnsmasq: Option<process::Child>,
     server_tx: Sender<NetworkCommandResponse>,
     network_rx: Receiver<NetworkCommand>,
     activated: bool,
@@ -166,7 +166,7 @@ impl NetworkCommandHandler {
                 NetworkCommand::EnableAp => {
                     if self.portal_connection.is_none() {
                         self.portal_connection = Some(create_portal(&self.device, &self.config)?);
-                        self.dnsmasq = start_dnsmasq(&self.config, &self.device)?;
+                        self.dnsmasq = Some(start_dnsmasq(&self.config, &self.device)?);
                     }
                 },
                 NetworkCommand::DisableAp => {
@@ -213,7 +213,9 @@ impl NetworkCommandHandler {
     }
 
     fn _stop(&mut self) {
-        let _ = self.dnsmasq.kill();
+        if let Some(ref dnsmasq) = self.dnsmasq {
+            let _ = dnsmasq.kill();
+        }
 
         if let Some(ref connection) = self.portal_connection {
             let _ = stop_portal_impl(connection, &self.config);
