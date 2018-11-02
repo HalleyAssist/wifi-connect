@@ -114,6 +114,10 @@ error_chain! {
         SendNetworkCommandCurrent {
             description("Sending NetworkCommand::Current failed")
         }
+
+        IncorrectCommand {
+            description("Received incorrect command response")
+        }
     }
 }
 
@@ -143,6 +147,7 @@ pub fn exit_code(e: &Error) -> i32 {
         ErrorKind::SendNetworkCommandDisableAp => 25,
         ErrorKind::SendNetworkCommandCurrent => 25,
         ErrorKind::SendStatus => 26,
+        ErrorKind::IncorrectCommand => 27,
         _ => 1,
     }
 }
