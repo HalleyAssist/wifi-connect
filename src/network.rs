@@ -209,7 +209,7 @@ impl NetworkCommandHandler {
     }
 
     fn stop(&mut self, exit_tx: &Sender<ExitResult>, result: ExitResult) {
-        self._stop()
+        self._stop();
 
         let _ = exit_tx.send(result);
     }
