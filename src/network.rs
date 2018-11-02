@@ -161,7 +161,7 @@ impl NetworkCommandHandler {
                     }
                 },
                 NetworkCommand::DisableAp => {
-                    self.stop();
+                    self._stop();
                 },
                 NetworkCommand::Activate => {
                     self.activate()?;
@@ -200,12 +200,16 @@ impl NetworkCommandHandler {
         }
     }
 
-    fn stop(&mut self, exit_tx: &Sender<ExitResult>, result: ExitResult) {
+    fn _stop(&mut self) {
         let _ = self.dnsmasq.kill();
 
         if let Some(ref connection) = self.portal_connection {
             let _ = stop_portal_impl(connection, &self.config);
         }
+    }
+
+    fn stop(&mut self, exit_tx: &Sender<ExitResult>, result: ExitResult) {
+        self._stop()
 
         let _ = exit_tx.send(result);
     }
