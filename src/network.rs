@@ -213,7 +213,7 @@ impl NetworkCommandHandler {
     }
 
     fn _stop(&mut self) {
-        if let Some(dnsmasq) = self.dnsmasq {
+        if let Some(ref mut dnsmasq) = self.dnsmasq {
             let _ = dnsmasq.kill();
         }
 
