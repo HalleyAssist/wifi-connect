@@ -70,7 +70,7 @@ impl NetworkCommandHandler {
 
         let access_points = get_access_points(&device)?;
 
-        let dnsmasq = start_dnsmasq(config, &device)?;
+        let dnsmasq = None;
 
         let portal_connection = None;
 
@@ -166,6 +166,7 @@ impl NetworkCommandHandler {
                 NetworkCommand::EnableAp => {
                     if self.portal_connection.is_none() {
                         self.portal_connection = Some(create_portal(&self.device, &self.config)?);
+                        self.dnsmasq = start_dnsmasq(config, &device)?;
                     }
                 },
                 NetworkCommand::DisableAp => {
