@@ -104,6 +104,16 @@ WiFi Connect is expected to work with all resin.io supported boards as long as t
 
 ***
 
+API
+---
+
+Endpoints:
+ * /connect POST: ssid, identity, passphrase
+ * /networks GET
+ * /enable_ap GET
+ * /disable_ap GET
+
+
 Support
 -------
 
