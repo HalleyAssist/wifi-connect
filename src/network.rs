@@ -166,7 +166,7 @@ impl NetworkCommandHandler {
                 NetworkCommand::EnableAp => {
                     if self.portal_connection.is_none() {
                         self.portal_connection = Some(create_portal(&self.device, &self.config)?);
-                        self.dnsmasq = start_dnsmasq(self.config, &self.device)?;
+                        self.dnsmasq = start_dnsmasq(&self.config, &self.device)?;
                     }
                 },
                 NetworkCommand::DisableAp => {
