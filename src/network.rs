@@ -17,6 +17,7 @@ use server::start_server;
 pub enum NetworkCommand {
     EnableAp,
     DisableAp,
+    Current,
     Activate,
     Timeout,
     Exit,
