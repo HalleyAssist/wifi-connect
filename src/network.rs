@@ -64,7 +64,7 @@ impl NetworkCommandHandler {
 
         let dnsmasq = start_dnsmasq(config, &device)?;
 
-        let portal_connection = None
+        let portal_connection = None;
 
         let (server_tx, server_rx) = channel();
 

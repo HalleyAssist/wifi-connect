@@ -98,6 +98,14 @@ error_chain! {
             description("Root privileges required")
             display("You need root privileges to run {}", app)
         }
+
+        ErrorKind::SendNetworkCommandEnableAp {
+            description("Sending NetworkCommand::EnableAp failed")
+        }
+
+        ErrorKind::SendNetworkCommandDisableAp {
+            description("Sending NetworkCommand::DisableAp failed")
+        }
     }
 }
 
