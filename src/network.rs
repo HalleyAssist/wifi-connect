@@ -225,7 +225,7 @@ impl NetworkCommandHandler {
     }
 
     fn current(&mut self) -> ExitResult {
-        let state = self.device..get_state()?;
+        let state = self.device.get_state()?;
 
         let status = CurrentStatus {
             apmode: self.portal_connection.is_none(),
