@@ -182,7 +182,7 @@ fn networks(req: &mut Request) -> IronResult<Response> {
     let networks = match request_state.server_rx.recv() {
         Ok(result) => match result {
             NetworkCommandResponse::Networks(networks) => networks,
-            _ => return exit_with_error(&request_state, e, ErrorKind::IncorrectCommand),
+            _ => return exit_with_error(&request_state, Err("Incorrect Command"), ErrorKind::IncorrectCommand),
         },
         Err(e) => return exit_with_error(&request_state, e, ErrorKind::RecvAccessPointSSIDs),
     };
@@ -259,7 +259,7 @@ fn current(req: &mut Request) -> IronResult<Response> {
     let networks = match request_state.server_rx.recv() {
         Ok(result) => match result {
             NetworkCommandResponse::Networks(networks) => networks,
-            _ => return exit_with_error(&request_state, e, ErrorKind::IncorrectCommand),
+            _ => return exit_with_error(&request_state, Err("Incorrect Command"), ErrorKind::IncorrectCommand),
         },
         Err(e) => return exit_with_error(&request_state, e, ErrorKind::RecvAccessPointSSIDs),
     };
