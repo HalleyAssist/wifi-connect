@@ -90,7 +90,7 @@ macro_rules! get_request_state {
     )
 }
 
-fn output_error<E>(state: &RequestSharedState, e_kind: ErrorKind) -> IronResult<Response>
+fn output_error(state: &RequestSharedState, e_kind: ErrorKind) -> IronResult<Response>
 {
     let description = e_kind.description().into();
     Err(IronError::new(
