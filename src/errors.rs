@@ -23,6 +23,10 @@ error_chain! {
             description("Sending access point SSIDs failed")
         }
 
+        SendStatus {
+            description("Sending current status failed")
+        }
+
         SerializeAccessPointSSIDs {
             description("Serializing access point SSIDs failed")
         }
@@ -106,6 +110,10 @@ error_chain! {
         SendNetworkCommandDisableAp {
             description("Sending NetworkCommand::DisableAp failed")
         }
+
+        SendNetworkCommandCurrent {
+            description("Sending NetworkCommand::Current failed")
+        }
     }
 }
 
@@ -133,6 +141,8 @@ pub fn exit_code(e: &Error) -> i32 {
         ErrorKind::RootPrivilegesRequired(_) => 23,
         ErrorKind::SendNetworkCommandEnableAp => 24,
         ErrorKind::SendNetworkCommandDisableAp => 25,
+        ErrorKind::SendNetworkCommandCurrent => 25,
+        ErrorKind::SendStatus => 26,
         _ => 1,
     }
 }

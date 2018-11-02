@@ -6,7 +6,7 @@ use std::error::Error;
 use std::net::Ipv4Addr;
 
 use network_manager::{AccessPoint, AccessPointCredentials, Connection, ConnectionState,
-                      Connectivity, Device, DeviceType, NetworkManager, Security, ServiceState};
+                      Connectivity, Device, DeviceType, DeviceState, NetworkManager, Security, ServiceState};
 
 use errors::*;
 use exit::{exit, trap_exit_signals, ExitResult};
@@ -33,8 +33,14 @@ pub struct Network {
     security: String,
 }
 
+pub struct CurrentStatus {
+    apmode: bool,
+    connected: bool,
+}
+
 pub enum NetworkCommandResponse {
     Networks(Vec<Network>),
+    Current(CurrentStatus),
 }
 
 struct NetworkCommandHandler {
@@ -163,6 +169,9 @@ impl NetworkCommandHandler {
                 NetworkCommand::DisableAp => {
                     self._stop();
                 },
+                NetworkCommand::Current => {
+                    self.current()?;
+                },
                 NetworkCommand::Activate => {
                     self.activate()?;
                 },
@@ -212,6 +221,19 @@ impl NetworkCommandHandler {
         self._stop();
 
         let _ = exit_tx.send(result);
+    }
+
+    fn current(&mut self) -> ExitResult {
+        let wifi = self.device.as_wifi_device()
+
+        let status = CurrentStatus {
+            apmode: self.portal_connection.is_none(),
+            connected: wifi.get_state() == DeviceState::Activated
+        };
+
+        self.server_tx
+            .send(NetworkCommandResponse::Current(status))
+            .chain_err(|| ErrorKind::SendStatus)
     }
 
     fn activate(&mut self) -> ExitResult {
