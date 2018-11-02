@@ -220,20 +220,28 @@ fn connect(req: &mut Request) -> IronResult<Response> {
 }
 
 fn enable_ap(req: &mut Request) -> IronResult<Response> {
+    debug!("Incoming `disable_ap` to access point");
+
+    let request_state = get_request_state!(req);
+    
     let command = NetworkCommand::EnableAp {};
 
     if let Err(e) = request_state.network_tx.send(command) {
-        exit_with_error(&request_state, e, ErrorKind::SendNetworkCommandConnect)
+        exit_with_error(&request_state, e, ErrorKind::SendNetworkCommandEnableAp)
     } else {
         Ok(Response::with(status::Ok))
     }
 }
 
 fn disable_ap(req: &mut Request) -> IronResult<Response> {
+    debug!("Incoming `enable_ap` to access point");
+
+    let request_state = get_request_state!(req);
+
     let command = NetworkCommand::EnableAp {};
 
     if let Err(e) = request_state.network_tx.send(command) {
-        exit_with_error(&request_state, e, ErrorKind::SendNetworkCommandConnect)
+        exit_with_error(&request_state, e, ErrorKind::SendNetworkCommandDisableAp)
     } else {
         Ok(Response::with(status::Ok))
     }

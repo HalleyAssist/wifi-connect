@@ -153,12 +153,12 @@ impl NetworkCommandHandler {
 
             match command {
                 NetworkCommand::EnableAp => {
-                    self.stop()?;
-                },
-                NetworkCommand::DisableAp => {
                     if self.portal_connection.is_none() {
                         self.portal_connection = Some(create_portal(&self.device, &self.config)?);
                     }
+                },
+                NetworkCommand::DisableAp => {
+                    self.stop();
                 },
                 NetworkCommand::Activate => {
                     self.activate()?;

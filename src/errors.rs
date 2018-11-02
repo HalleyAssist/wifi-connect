@@ -123,6 +123,8 @@ pub fn exit_code(e: &Error) -> i32 {
         ErrorKind::BlockExitSignals => 21,
         ErrorKind::TrapExitSignals => 22,
         ErrorKind::RootPrivilegesRequired(_) => 23,
+        ErrorKind::SendNetworkCommandEnableAp => 24,
+        ErrorKind::SendNetworkCommandDisableAp => 25,
         _ => 1,
     }
 }
