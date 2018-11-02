@@ -156,7 +156,7 @@ impl NetworkCommandHandler {
                     self.stop()?;
                 },
                 NetworkCommand::DisableAp => {
-                    if self.portal_connection {
+                    if self.portal_connection.is_none() {
                         self.portal_connection = Some(create_portal(&self.device, &self.config)?);
                     }
                 },
