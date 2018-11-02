@@ -238,7 +238,7 @@ fn disable_ap(req: &mut Request) -> IronResult<Response> {
 
     let request_state = get_request_state!(req);
 
-    let command = NetworkCommand::EnableAp {};
+    let command = NetworkCommand::DisableAp {};
 
     if let Err(e) = request_state.network_tx.send(command) {
         exit_with_error(&request_state, e, ErrorKind::SendNetworkCommandDisableAp)
