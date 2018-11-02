@@ -265,19 +265,19 @@ fn current(req: &mut Request) -> IronResult<Response> {
         return exit_with_error(&request_state, e, ErrorKind::SendNetworkCommandCurrent);
     }
 
-    let networks = match request_state.server_rx.recv() {
+    let state = match request_state.server_rx.recv() {
         Ok(result) => match result {
-            NetworkCommandResponse::Networks(networks) => networks,
+            NetworkCommandResponse::Current(state) => state,
             _ => return output_error(&request_state, ErrorKind::IncorrectCommand),
         },
         Err(e) => return exit_with_error(&request_state, e, ErrorKind::RecvAccessPointSSIDs),
     };
 
-    let access_points_json = match serde_json::to_string(&networks) {
+    let state_json = match serde_json::to_string(&state) {
         Ok(json) => json,
         Err(e) => return exit_with_error(&request_state, e, ErrorKind::SerializeAccessPointSSIDs),
     };
 
-    Ok(Response::with((status::Ok, access_points_json)))
+    Ok(Response::with((status::Ok, state_json)))
 
 }
