@@ -225,11 +225,9 @@ impl NetworkCommandHandler {
     }
 
     fn current(&mut self) -> ExitResult {
-        let wifi = self.device.as_wifi_device()
-
         let status = CurrentStatus {
             apmode: self.portal_connection.is_none(),
-            connected: wifi.get_state() == DeviceState::Activated
+            connected: self.device.get_state() == DeviceState::Activated
         };
 
         self.server_tx
