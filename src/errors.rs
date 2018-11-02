@@ -99,11 +99,11 @@ error_chain! {
             display("You need root privileges to run {}", app)
         }
 
-        ErrorKind::SendNetworkCommandEnableAp {
+        SendNetworkCommandEnableAp {
             description("Sending NetworkCommand::EnableAp failed")
         }
 
-        ErrorKind::SendNetworkCommandDisableAp {
+        SendNetworkCommandDisableAp {
             description("Sending NetworkCommand::DisableAp failed")
         }
     }
