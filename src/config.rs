@@ -43,10 +43,7 @@ pub fn get_config() -> Config {
                 .short("s")
                 .long("portal-ssid")
                 .value_name("ssid")
-                .help(&format!(
-                    "SSID of the captive portal WiFi network (default: {})",
-                    DEFAULT_SSID
-                ))
+                .help("SSID of the captive portal WiFi network")
                 .takes_value(true),
         )
         .arg(
@@ -116,9 +113,9 @@ pub fn get_config() -> Config {
         |v| Some(v.to_string()),
     );
 
-    let ssid: String = &format("HalleyHub-{}", env::var("BALENA_DEVICE_UUID")[0..12]);
+    let ssid: String = &format!("HalleyHub-{}", env::var("BALENA_DEVICE_UUID")[0..12]);
 
-    let passphrase: Option<String> = env::var("PAIRING_CODE").pad(8, '_', Alignment::Right, false);
+    let passphrase: Option<String> = Ok(env::var("PAIRING_CODE")?.pad(8, '_', Alignment::Right, false));
 
     let gateway = Ipv4Addr::from_str(&matches.value_of("portal-gateway").map_or_else(
         || env::var("PORTAL_GATEWAY").unwrap_or_else(|_| DEFAULT_GATEWAY.to_string()),
