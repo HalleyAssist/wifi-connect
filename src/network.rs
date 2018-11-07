@@ -411,14 +411,13 @@ fn get_access_points_impl(device: &Device) -> Result<Vec<AccessPoint>> {
     let mut retries = 0;
 
     let wifi_device = device.as_wifi_device().unwrap();
-    
+
     let _ = wifi_device.request_scan();
-    thread::sleep(Duration::from_secs(2));
+    thread::sleep(Duration::from_secs(5));
 
     // After stopping the hotspot we may have to wait a bit for the list
     // of access points to become available
     while retries < retries_allowed {
-        
         let mut access_points = wifi_device.get_access_points()?;
 
         access_points.retain(|ap| ap.ssid().as_str().is_ok());
