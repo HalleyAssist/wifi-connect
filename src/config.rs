@@ -5,10 +5,10 @@ use std::net::Ipv4Addr;
 use std::str::FromStr;
 use std::path::PathBuf;
 use std::ffi::OsStr;
+use pad::PadStr;
 
 const DEFAULT_GATEWAY: &str = "192.168.42.1";
 const DEFAULT_DHCP_RANGE: &str = "192.168.42.2,192.168.42.254";
-const DEFAULT_SSID: &str = "WiFi Connect";
 const DEFAULT_ACTIVITY_TIMEOUT: &str = "0";
 const DEFAULT_UI_DIRECTORY: &str = "ui";
 const DEFAULT_LISTENING: &str = "0.0.0.0:80";
@@ -116,15 +116,9 @@ pub fn get_config() -> Config {
         |v| Some(v.to_string()),
     );
 
-    let ssid: String = matches.value_of("portal-ssid").map_or_else(
-        || env::var("PORTAL_SSID").unwrap_or_else(|_| DEFAULT_SSID.to_string()),
-        String::from,
-    );
+    let ssid: String = &format("HalleyHub-{}", env::var("BALENA_DEVICE_UUID")[0..12]);
 
-    let passphrase: Option<String> = matches.value_of("portal-passphrase").map_or_else(
-        || env::var("PORTAL_PASSPHRASE").ok(),
-        |v| Some(v.to_string()),
-    );
+    let passphrase: Option<String> = env::var("PAIRING_CODE").pad(8, '_', Alignment::Right, false);
 
     let gateway = Ipv4Addr::from_str(&matches.value_of("portal-gateway").map_or_else(
         || env::var("PORTAL_GATEWAY").unwrap_or_else(|_| DEFAULT_GATEWAY.to_string()),
