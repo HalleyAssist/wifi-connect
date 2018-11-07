@@ -1,5 +1,5 @@
 use clap::{App, Arg};
-use pad::PadStr;
+use pad::{PadStr, Alignment};
 
 use std::env;
 use std::net::Ipv4Addr;
@@ -113,7 +113,7 @@ pub fn get_config() -> Config {
         |v| Some(v.to_string()),
     );
 
-    let ssid: String = &format!("HalleyHub-{}", env::var("BALENA_DEVICE_UUID")[0..12]);
+    let ssid: String = format!("HalleyHub-{}", env::var("BALENA_DEVICE_UUID").ok()[0..12]);
 
     let passphrase: Option<String> = Ok(env::var("PAIRING_CODE")?.pad(8, '_', Alignment::Right, false));
 
