@@ -113,7 +113,7 @@ pub fn get_config() -> Config {
         |v| Some(v.to_string()),
     );
 
-    let ssid: String = format!("HalleyHub-{}", env::var("BALENA_DEVICE_UUID").ok().unwrap()[0..12]);
+    let ssid: String = format!("HalleyHub-{}", env::var("BALENA_DEVICE_UUID").ok().&unwrap()[0..12]);
 
     let passphrase: Option<String> = Some(env::var("PAIRING_CODE").ok().unwrap().pad(8, '_', Alignment::Right, false));
 
