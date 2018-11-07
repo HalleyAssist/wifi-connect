@@ -1,11 +1,11 @@
 use clap::{App, Arg};
+use pad::PadStr;
 
 use std::env;
 use std::net::Ipv4Addr;
 use std::str::FromStr;
 use std::path::PathBuf;
 use std::ffi::OsStr;
-use pad::PadStr;
 
 const DEFAULT_GATEWAY: &str = "192.168.42.1";
 const DEFAULT_DHCP_RANGE: &str = "192.168.42.2,192.168.42.254";

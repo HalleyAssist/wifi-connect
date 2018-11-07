@@ -24,6 +24,9 @@ extern crate router;
 extern crate serde_json;
 extern crate staticfile;
 
+#[macro_use]
+extern crate pad;
+
 mod errors;
 mod config;
 mod network;
