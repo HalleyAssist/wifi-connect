@@ -81,7 +81,7 @@ impl NetworkCommandHandler {
 
         let portal_connection = None;
 
-        if has_connection_defined() == Ok(false) {
+        if has_connection_defined()? == false {
             portal_connection = Some(create_portal(&device, &config)?);
             dnsmasq = Some(start_dnsmasq(&config, &device)?);
         }
