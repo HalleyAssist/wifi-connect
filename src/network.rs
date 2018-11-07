@@ -500,7 +500,7 @@ fn create_portal_impl(
     info!("Starting access point...");
     let wifi_device = device.as_wifi_device().unwrap();
     let (portal_connection, _) = wifi_device.create_hotspot(ssid, *passphrase, Some(*gateway))?;
-    info!("Access point '{}' created", ssid);
+    info!("Access point '{}' created with passphrase '{}'", ssid, *passphrase.unwrap_or_default());
     Ok(portal_connection)
 }
 
