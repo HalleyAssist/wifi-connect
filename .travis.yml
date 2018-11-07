@@ -1,9 +1,16 @@
 language: rust
 rust:
-  - stable
-  - beta
-  - nightly
+- stable
+- beta
+- nightly
 cache: cargo
 before_install:
-  - sudo apt-get update
-  - sudo apt-get install -y libdbus-1-dev
+- sudo apt-get update
+- sudo apt-get install -y libdbus-1-dev
+deploy:
+  provider: releases
+  api_key:
+    secure: SlB+PFeBNjQf7UdhPHzeTGHxWBHTUJM4pBIPcHAUT7IjfiURZYziTgFF4uHC+XhDfIMbmtUMWzVDvIfn/CudnEMnW/2AIEDjesATGp4xx/Yo9hlD0jpiPwelwRTxuc7Bj1jj+qgxI+kSWXfD54EILuiom/pvW+YqukfjARfsibbzSPqZvOW8E8Ei94wB2zsUln+0IndHcqrtOoUYpEx8pUyt3Q1crwVsIgMfy1PYaOGJWHPPeolrdSz2gj9odpAV6TYVhqOL0jNyT2IO3WiNugusb3ZM3Mb0PzyhpRW9wKVe34KOhNlxBO6VR+ie9Ks9/1gJD0emi6fVcucH/zphjcZE0f7/Bz+YFkIrPC4kHzUq9AYNictEC+l5egslRgKeBu3Vg8EjHjfxmnjP6hrHnJo3vOFNbf7HTW+eecVE/+YoKWzDSjTlS2L9vw+IGHWMxpFnXO99rzeHoKU9FPa1s5IiSVHVGR+Yf7yxvug281pH0aoBdMtEs0iyMZS8H2cvxIiLwA+Sn+0nEQDpFRPTdCRl+RAQ5kkFo9JU2ZpDF07p3mnrNtk5qDn2JN5AIdk0GjflFTpLaqNgFiiArWf42j3lpk0eBJtd62ED5H4XSh1ZJumwLBQa6kyKvSD6zIA+tdGzfZGTSBO8+0ZfZRImhUSAVtHHk0ezQ5rYMhJ0F4w=
+  file: target/release/wifi-connect
+  on:
+    repo: HalleyAssist/wifi-connect
