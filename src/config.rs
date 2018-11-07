@@ -115,7 +115,7 @@ pub fn get_config() -> Config {
 
     let ssid: String = format!("HalleyHub-{}", env::var("BALENA_DEVICE_UUID").ok()[0..12]);
 
-    let passphrase: Option<String> = Ok(env::var("PAIRING_CODE")?.pad(8, '_', Alignment::Right, false));
+    let passphrase: Option<String> = Some(env::var("PAIRING_CODE").ok().pad(8, '_', Alignment::Right, false));
 
     let gateway = Ipv4Addr::from_str(&matches.value_of("portal-gateway").map_or_else(
         || env::var("PORTAL_GATEWAY").unwrap_or_else(|_| DEFAULT_GATEWAY.to_string()),
