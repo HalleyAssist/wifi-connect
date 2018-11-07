@@ -49,7 +49,7 @@ pub struct HasConnection {
 pub enum NetworkCommandResponse {
     Networks(Vec<Network>),
     Current(CurrentStatus),
-    HasConnection(CurrentStatus),
+    HasConnection(HasConnection),
 }
 
 struct NetworkCommandHandler {
@@ -574,7 +574,7 @@ pub fn start_network_manager_service() -> Result<()> {
     Ok(())
 }
 
-pub fn has_connection_defined() -> bool {
+pub fn has_connection_defined() -> Result<bool> {
     let manager = NetworkManager::new();
 
     let connections = manager.get_connections()?;
