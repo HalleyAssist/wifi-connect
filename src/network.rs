@@ -55,7 +55,6 @@ pub enum NetworkCommandResponse {
 struct NetworkCommandHandler {
     manager: NetworkManager,
     device: Device,
-    access_points: Vec<AccessPoint>,
     portal_connection: Option<Connection>,
     config: Config,
     dnsmasq: Option<process::Child>,
@@ -74,8 +73,6 @@ impl NetworkCommandHandler {
         debug!("NetworkManager connection initialized");
 
         let device = find_device(&manager, &config.interface)?;
-
-        let access_points = get_access_points(&device)?;
 
         let dnsmasq;
         let portal_connection;
@@ -100,7 +97,6 @@ impl NetworkCommandHandler {
         Ok(NetworkCommandHandler {
             manager,
             device,
-            access_points,
             config,
             dnsmasq,
             portal_connection,
@@ -271,7 +267,8 @@ impl NetworkCommandHandler {
     fn activate(&mut self) -> ExitResult {
         self.activated = true;
 
-        let networks = get_networks(&self.access_points);
+        let access_points = get_access_points(&self.device)?;
+        let networks = get_networks(&access_points);
 
         self.server_tx
             .send(NetworkCommandResponse::Networks(networks))
@@ -287,9 +284,9 @@ impl NetworkCommandHandler {
 
         self.portal_connection = None;
 
-        self.access_points = get_access_points(&self.device)?;
+        let access_points = get_access_points(&self.device)?;
 
-        if let Some(access_point) = find_access_point(&self.access_points, ssid) {
+        if let Some(access_point) = find_access_point(&access_points, ssid) {
             let wifi_device = self.device.as_wifi_device().unwrap();
 
             info!("Connecting to access point '{}'...", ssid);
@@ -327,8 +324,6 @@ impl NetworkCommandHandler {
                 },
             }
         }
-
-        self.access_points = get_access_points(&self.device)?;
 
         self.portal_connection = Some(create_portal(&self.device, &self.config)?);
 
