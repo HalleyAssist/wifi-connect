@@ -112,7 +112,7 @@ Endpoints:
  * /networks GET
  * /enable_ap GET
  * /disable_ap GET
-
+ * /has_connection GET
 
 Support
 -------
