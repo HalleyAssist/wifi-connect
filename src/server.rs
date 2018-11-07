@@ -90,7 +90,7 @@ macro_rules! get_request_state {
     )
 }
 
-fn output_error(state: &RequestSharedState, e_kind: ErrorKind) -> IronResult<Response>
+fn output_error(e_kind: ErrorKind) -> IronResult<Response>
 {
     let description = e_kind.description().into();
     Err(IronError::new(
@@ -192,7 +192,7 @@ fn networks(req: &mut Request) -> IronResult<Response> {
     let networks = match request_state.server_rx.recv() {
         Ok(result) => match result {
             NetworkCommandResponse::Networks(networks) => networks,
-            _ => return output_error(&request_state, ErrorKind::IncorrectCommand),
+            _ => return output_error(ErrorKind::IncorrectCommand),
         },
         Err(e) => return exit_with_error(&request_state, e, ErrorKind::RecvAccessPointSSIDs),
     };
@@ -269,7 +269,7 @@ fn current(req: &mut Request) -> IronResult<Response> {
     let state = match request_state.server_rx.recv() {
         Ok(result) => match result {
             NetworkCommandResponse::Current(state) => state,
-            _ => return output_error(&request_state, ErrorKind::IncorrectCommand),
+            _ => return output_error(ErrorKind::IncorrectCommand),
         },
         Err(e) => return exit_with_error(&request_state, e, ErrorKind::RecvAccessPointSSIDs),
     };
@@ -293,7 +293,7 @@ fn has_connection(req: &mut Request) -> IronResult<Response> {
     let state = match request_state.server_rx.recv() {
         Ok(result) => match result {
             NetworkCommandResponse::HasConnection(state) => state,
-            _ => return output_error(&request_state, ErrorKind::IncorrectCommand),
+            _ => return output_error(ErrorKind::IncorrectCommand),
         },
         Err(e) => return exit_with_error(&request_state, e, ErrorKind::RecvAccessPointSSIDs),
     };
