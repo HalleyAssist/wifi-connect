@@ -74,6 +74,11 @@ impl NetworkCommandHandler {
 
         let portal_connection = None;
 
+        if ! is_connection_defined() {
+            portal_connection = Some(create_portal(&device, &config)?);
+            dnsmasq = Some(start_dnsmasq(&config, &device)?);
+        }
+
         let (server_tx, server_rx) = channel();
 
         Self::spawn_server(config, exit_tx, server_rx, network_tx.clone());
@@ -547,6 +552,20 @@ pub fn start_network_manager_service() -> Result<()> {
     }
 
     Ok(())
+}
+
+fn is_connection_defined() -> bool {
+    let manager = NetworkManager::new();
+
+    let connections = manager.get_connections()?;
+
+    for connection in connections {
+        if &connection.settings().kind == "802-11-wireless" && &connection.settings().mode != "ap" {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 fn delete_access_point_profiles() -> Result<()> {
