@@ -77,13 +77,15 @@ impl NetworkCommandHandler {
 
         let access_points = get_access_points(&device)?;
 
-        let dnsmasq = None;
-
-        let portal_connection = None;
+        let dnsmasq;
+        let portal_connection;
 
         if has_connection_defined()? == false {
             portal_connection = Some(create_portal(&device, &config)?);
             dnsmasq = Some(start_dnsmasq(&config, &device)?);
+        } else {
+            portal_connection = None;
+            dnsmasq = None;
         }
 
         let (server_tx, server_rx) = channel();
