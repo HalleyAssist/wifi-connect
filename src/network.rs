@@ -415,7 +415,7 @@ fn get_access_points_impl(device: &Device) -> Result<Vec<AccessPoint>> {
     while retries < retries_allowed {
         let wifi_device = device.as_wifi_device().unwrap();
         
-        wifi_device.request_scan();
+        wifi_device.request_scan()?;
         thread::sleep(Duration::from_secs(2));
         let mut access_points = wifi_device.get_access_points()?;
 
