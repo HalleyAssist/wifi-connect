@@ -81,7 +81,7 @@ impl NetworkCommandHandler {
 
         let portal_connection = None;
 
-        if ! has_connection_defined() {
+        if has_connection_defined() == Ok(false) {
             portal_connection = Some(create_portal(&device, &config)?);
             dnsmasq = Some(start_dnsmasq(&config, &device)?);
         }
@@ -258,7 +258,7 @@ impl NetworkCommandHandler {
 
     fn has_connection(&mut self) -> ExitResult {
         let status = HasConnection {
-            result: has_connection_defined()
+            result: has_connection_defined()?
         };
 
         self.server_tx
@@ -581,11 +581,11 @@ pub fn has_connection_defined() -> Result<bool> {
 
     for connection in connections {
         if &connection.settings().kind == "802-11-wireless" && &connection.settings().mode != "ap" {
-            return true;
+            return Ok(true);
         }
     }
 
-    return false;
+    return Ok(false);
 }
 
 fn delete_access_point_profiles() -> Result<()> {
