@@ -118,6 +118,14 @@ error_chain! {
         IncorrectCommand {
             description("Received incorrect command response")
         }
+
+        SendHasConnection {
+            description("Sending HasConnection failed")
+        }
+
+        SendNetworkCommandHasConnection {
+            description("Sending NetworkCommand::HasConnection failed")
+        }
     }
 }
 
@@ -148,6 +156,8 @@ pub fn exit_code(e: &Error) -> i32 {
         ErrorKind::SendNetworkCommandCurrent => 25,
         ErrorKind::SendStatus => 26,
         ErrorKind::IncorrectCommand => 27,
+        ErrorKind::SendHasConnection => 28,
+        ErrorKind::SendNetworkCommandHasConnection => 29,
         _ => 1,
     }
 }

@@ -155,6 +155,7 @@ pub fn start_server(
     router.get("/enable_ap", enable_ap, "enable_ap");
     router.get("/disable_ap", disable_ap, "disable_ap");
     router.get("/current", current, "current");
+    router.get("/has_connection", has_connection, "has_connection");
 
     let mut assets = Mount::new();
     assets.mount("/", router);
@@ -268,6 +269,30 @@ fn current(req: &mut Request) -> IronResult<Response> {
     let state = match request_state.server_rx.recv() {
         Ok(result) => match result {
             NetworkCommandResponse::Current(state) => state,
+            _ => return output_error(&request_state, ErrorKind::IncorrectCommand),
+        },
+        Err(e) => return exit_with_error(&request_state, e, ErrorKind::RecvAccessPointSSIDs),
+    };
+
+    let state_json = match serde_json::to_string(&state) {
+        Ok(json) => json,
+        Err(e) => return exit_with_error(&request_state, e, ErrorKind::SerializeAccessPointSSIDs),
+    };
+
+    Ok(Response::with((status::Ok, state_json)))
+
+}
+
+fn has_connection(req: &mut Request) -> IronResult<Response> {
+    let request_state = get_request_state!(req);
+
+    if let Err(e) = request_state.network_tx.send(NetworkCommand::HasConnection) {
+        return exit_with_error(&request_state, e, ErrorKind::SendNetworkCommandHasConnection);
+    }
+
+    let state = match request_state.server_rx.recv() {
+        Ok(result) => match result {
+            NetworkCommandResponse::HasConnection(state) => state,
             _ => return output_error(&request_state, ErrorKind::IncorrectCommand),
         },
         Err(e) => return exit_with_error(&request_state, e, ErrorKind::RecvAccessPointSSIDs),

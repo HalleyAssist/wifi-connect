@@ -18,6 +18,7 @@ pub enum NetworkCommand {
     EnableAp,
     DisableAp,
     Current,
+    HasConnection,
     Activate,
     Timeout,
     Exit,
@@ -40,9 +41,15 @@ pub struct CurrentStatus {
     connected: bool,
 }
 
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
+pub struct HasConnection {
+    result: bool
+}
+
 pub enum NetworkCommandResponse {
     Networks(Vec<Network>),
     Current(CurrentStatus),
+    HasConnection(CurrentStatus),
 }
 
 struct NetworkCommandHandler {
@@ -74,7 +81,7 @@ impl NetworkCommandHandler {
 
         let portal_connection = None;
 
-        if ! is_connection_defined() {
+        if ! has_connection_defined() {
             portal_connection = Some(create_portal(&device, &config)?);
             dnsmasq = Some(start_dnsmasq(&config, &device)?);
         }
@@ -180,6 +187,9 @@ impl NetworkCommandHandler {
                 NetworkCommand::Current => {
                     self.current()?;
                 },
+                NetworkCommand::HasConnection => {
+                    self.has_connection()?;
+                },
                 NetworkCommand::Activate => {
                     self.activate()?;
                 },
@@ -244,6 +254,16 @@ impl NetworkCommandHandler {
         self.server_tx
             .send(NetworkCommandResponse::Current(status))
             .chain_err(|| ErrorKind::SendStatus)
+    }
+
+    fn has_connection(&mut self) -> ExitResult {
+        let status = HasConnection {
+            result: has_connection_defined()
+        };
+
+        self.server_tx
+            .send(NetworkCommandResponse::HasConnection(status))
+            .chain_err(|| ErrorKind::SendHasConnection)
     }
 
     fn activate(&mut self) -> ExitResult {
@@ -554,7 +574,7 @@ pub fn start_network_manager_service() -> Result<()> {
     Ok(())
 }
 
-fn is_connection_defined() -> bool {
+pub fn has_connection_defined() -> bool {
     let manager = NetworkManager::new();
 
     let connections = manager.get_connections()?;
