@@ -12,22 +12,22 @@ $(function(){
 
 	function setManual(toValue){
 		if(toValue){
-			$('#identity-group, #ssid-manual').show();
-			$('#ssid-select').hide();
+			$('#identity-group, #ssid-manual, #btn-ssid-manual').show();
+			$('#ssid-select, #btn-ssid-list').hide();
 		}else{
-			$('#ssid-select').show();
-			$('#ssid-manual').hide();
+			$('#ssid-select, #btn-ssid-list').show();
+			$('#ssid-manual, #btn-ssid-manual').hide();
 			showHideEnterpriseSettings();
 		}
 		is_manual = toValue;
 	}
 
-	$('#btn-ssid-manual').submit(function(ev){
+	$('#btn-ssid-manual').click(function(ev){
 		setManual(true)
 		ev.preventDefault();
 	})
 
-	$('#btn-ssid-list').submit(function(ev){
+	$('#btn-ssid-list').click(function(ev){
 		setManual(false)
 		ev.preventDefault();
 	})

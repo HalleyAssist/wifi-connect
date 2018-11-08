@@ -36,6 +36,10 @@
 			#ssid-manual, #btn-ssid-list {
 				display: none;
 			}
+
+			.btn-ssid {
+				width: 100%;
+			}
 		</style>
 	</head>
 
@@ -63,10 +67,10 @@
 							<label for="ssid-select" class="control-label col-lg-2">SSID</label>
 							<div class="col-lg-6">
 								<select id='ssid-select' class="form-control ssid-input"></select>
-								<button id="btn-ssid-manual" class='btn btn-warn'>Manual</button>
+								<button id="btn-ssid-manual" class='btn btn-ssid'>Manual SSID Input</button>
 
 								<input id='ssid-manual' class="form-control ssid-input">
-								<button id="btn-ssid-list" class='btn btn-warn'>Select from List</button>
+								<button id="btn-ssid-list" class='btn btn-ssid'>Select SSID from List</button>
 							</div>
 						</div>
 						<div class="form-group" id="identity-group">
