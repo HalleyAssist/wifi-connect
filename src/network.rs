@@ -494,7 +494,7 @@ fn get_networks(access_points: &[AP]) -> Vec<Network> {
 fn get_network_info(access_point: std::rc::Rc<network_manager::AccessPoint>) -> Network {
     Network {
         ssid: access_point.ssid().as_str().unwrap().to_string(),
-        security: get_network_security(access_point).to_string(),
+        security: get_network_security(&access_point).to_string(),
     }
 }
 
