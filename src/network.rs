@@ -279,7 +279,7 @@ impl NetworkCommandHandler {
     fn activate(&mut self) -> ExitResult {
         self.activated = true;
 
-        let access_points = get_access_points(&self.device)?;
+        let access_points = get_access_points(&self.device, self.config.ssid)?;
         let networks = get_networks(&access_points);
 
         self.server_tx
@@ -296,7 +296,7 @@ impl NetworkCommandHandler {
 
         self.portal_connection = None;
 
-        let access_points = get_access_points(&self.device)?;
+        let access_points = get_access_points(&self.device, self.config.ssid)?;
 
         if let Some(access_point) = find_access_point(&access_points, ssid) {
             let wifi_device = self.device.as_wifi_device().unwrap();
@@ -414,11 +414,11 @@ pub fn find_device(manager: &NetworkManager, interface: &Option<String>) -> Resu
     }
 }
 
-fn get_access_points(device: &Device) -> Result<Vec<AccessPoint>> {
-    get_access_points_impl(device).chain_err(|| ErrorKind::NoAccessPoints)
+fn get_access_points(device: &Device, own_ssid: string) -> Result<Vec<AccessPoint>> {
+    get_access_points_impl(device, own_ssid).chain_err(|| ErrorKind::NoAccessPoints)
 }
 
-fn get_access_points_impl(device: &Device) -> Result<Vec<AccessPoint>> {
+fn get_access_points_impl(device: &Device, own_ssid: string) -> Result<Vec<AccessPoint>> {
     let retries_allowed = 10;
     let mut retries = 0;
 
@@ -427,8 +427,6 @@ fn get_access_points_impl(device: &Device) -> Result<Vec<AccessPoint>> {
         thread::sleep(Duration::from_secs(4));
     }
 
-    let ssid = self.config.ssid;
-
     // After stopping the hotspot we may have to wait a bit for the list
     // of access points to become available
     while retries < retries_allowed {
@@ -436,7 +434,7 @@ fn get_access_points_impl(device: &Device) -> Result<Vec<AccessPoint>> {
 
         access_points.retain(|ap| ap.ssid().as_str().is_ok());
 
-        access_points = access_points.iter().filter(|ap| ap.ssid().as_str().unwrap() == ssid).collect();
+        access_points = access_points.iter().filter(|ap| ap.ssid().as_str().unwrap() == own_ssid).collect();
 
         if !access_points.is_empty() {
             info!(
