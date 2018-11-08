@@ -414,11 +414,11 @@ pub fn find_device(manager: &NetworkManager, interface: &Option<String>) -> Resu
     }
 }
 
-fn get_access_points(device: &Device, own_ssid: string) -> Result<Vec<AccessPoint>> {
+fn get_access_points(device: &Device, own_ssid: String) -> Result<Vec<AccessPoint>> {
     get_access_points_impl(device, own_ssid).chain_err(|| ErrorKind::NoAccessPoints)
 }
 
-fn get_access_points_impl(device: &Device, own_ssid: string) -> Result<Vec<AccessPoint>> {
+fn get_access_points_impl(device: &Device, own_ssid: String) -> Result<Vec<AccessPoint>> {
     let retries_allowed = 10;
     let mut retries = 0;
 
