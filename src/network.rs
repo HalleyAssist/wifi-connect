@@ -434,7 +434,7 @@ fn get_access_points_impl(device: &Device) -> Result<Vec<AccessPoint>> {
 
         access_points.retain(|ap| ap.ssid().as_str().is_ok());
 
-        access_points = access_points.iter().filter(|a| ap.ssid().as_str().unwrap() == ssid).collect()
+        access_points = access_points.iter().filter(|ap| ap.ssid().as_str().unwrap() == ssid).collect();
 
         if !access_points.is_empty() {
             info!(
