@@ -293,7 +293,7 @@ impl NetworkCommandHandler {
 
         for x in &self.access_points {
             let xssid = x.ssid().as_str().unwrap();
-            if let Some(_) = new_access_points.iter().find(|ref mut xx| xx.ssid().as_str().unwrap() == xssid) {
+            if let Some(_) = new_access_points.iter().find(|xx| xx.ssid().as_str().unwrap() == xssid) {
                 new_access_points.push((*x).clone());
             }
         }
@@ -477,7 +477,7 @@ fn get_access_points_impl(device: &Device, own_ssid: &str) -> Result<Vec<AP>> {
     Ok(vec![])
 }
 
-fn get_access_points_ssids(access_points: &[AP]) -> Vec<&str> {
+fn get_access_points_ssids(access_points: &[AccessPoint]) -> Vec<&str> {
     access_points
         .iter()
         .map(|ap| ap.ap.ssid().as_str().unwrap())
