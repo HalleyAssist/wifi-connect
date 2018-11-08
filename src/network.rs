@@ -16,7 +16,7 @@ use server::start_server;
 
 [derive(Clone)]
 struct AP {
-    AccessPoint ap;
+    ap: AccessPoint,
 }
 
 pub enum NetworkCommand {
