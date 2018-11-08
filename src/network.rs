@@ -427,6 +427,8 @@ fn get_access_points_impl(device: &Device) -> Result<Vec<AccessPoint>> {
         thread::sleep(Duration::from_secs(4));
     }
 
+    let ssid = self.config.ssid;
+
     // After stopping the hotspot we may have to wait a bit for the list
     // of access points to become available
     while retries < retries_allowed {
