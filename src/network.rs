@@ -57,6 +57,7 @@ struct NetworkCommandHandler {
     device: Device,
     portal_connection: Option<Connection>,
     config: Config,
+    access_points: Vec<AccessPoint>,
     dnsmasq: Option<process::Child>,
     server_tx: Sender<NetworkCommandResponse>,
     network_rx: Receiver<NetworkCommand>,
@@ -90,6 +91,8 @@ impl NetworkCommandHandler {
         }
         thread::sleep(Duration::from_secs(4));
 
+        let access_points = get_access_points(&self.device, &self.config.ssid)?;
+
         let (server_tx, server_rx) = channel();
 
         Self::spawn_server(config, exit_tx, server_rx, network_tx.clone());
@@ -103,6 +106,7 @@ impl NetworkCommandHandler {
             manager,
             device,
             config,
+            access_points,
             dnsmasq,
             portal_connection,
             server_tx,
@@ -276,10 +280,16 @@ impl NetworkCommandHandler {
             .chain_err(|| ErrorKind::SendHasConnection)
     }
 
+    
+    fn get_access_points(&mut self) -> Result<Vec<AccessPoint>> {
+        let new_access_points = get_access_points(&self.device, &self.config.ssid)?;
+        return new_access_points.extend(self.access_points)
+    }
+
     fn activate(&mut self) -> ExitResult {
         self.activated = true;
 
-        let access_points = get_access_points(&self.device, &self.config.ssid)?;
+        let access_points = self.get_access_points()?;
         let networks = get_networks(&access_points);
 
         self.server_tx
@@ -296,7 +306,7 @@ impl NetworkCommandHandler {
 
         self.portal_connection = None;
 
-        let access_points = get_access_points(&self.device, &self.config.ssid)?;
+        let access_points = self.get_access_points()?;
 
         if let Some(access_point) = find_access_point(&access_points, ssid) {
             let wifi_device = self.device.as_wifi_device().unwrap();
