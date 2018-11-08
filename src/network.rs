@@ -14,6 +14,8 @@ use config::Config;
 use dnsmasq::start_dnsmasq;
 use server::start_server;
 
+impl Clone for AccessPoint {}
+
 pub enum NetworkCommand {
     EnableAp,
     DisableAp,
