@@ -286,8 +286,8 @@ impl NetworkCommandHandler {
 
         for x in &self.access_points {
             let xssid = x.ssid().as_str().unwrap();
-            if new_access_points.iter().find(|&&xx| xx.ssid().as_str().unwrap() == xssid) {
-                new_access_points.push(x)
+            if let Some(_) = new_access_points.iter().find(|&&xx| xx.ssid().as_str().unwrap() == xssid) {
+                new_access_points.push(*x)
             }
         }
 
