@@ -268,13 +268,13 @@ fn restart_ap(req: &mut Request) -> IronResult<Response> {
     let command1 = NetworkCommand::DisableAp {};
 
     if let Err(e) = request_state.network_tx.send(command1) {
-        exit_with_error(&request_state, e, ErrorKind::SendNetworkCommandDisableAp)
+        exit_with_error(&request_state, e, ErrorKind::SendNetworkCommandDisableAp);
     }
     
     let command = NetworkCommand::EnableAp {};
 
     if let Err(e) = request_state.network_tx.send(command) {
-        exit_with_error(&request_state, e, ErrorKind::SendNetworkCommandEnableAp)
+        exit_with_error(&request_state, e, ErrorKind::SendNetworkCommandEnableAp);
     } else {
         Ok(Response::with(status::Ok))
     }
