@@ -236,13 +236,13 @@ impl NetworkCommandHandler {
     fn _stop(&mut self) {
         if let Some(ref mut dnsmasq) = self.dnsmasq {
             let _ = dnsmasq.kill();
-            self.dnsmasq = None
         }
+        self.dnsmasq = None
 
         if let Some(ref connection) = self.portal_connection {
             let _ = stop_portal_impl(connection, &self.config);
-            self.portal_connection = None
         }
+        self.portal_connection = None
     }
 
     fn stop(&mut self, exit_tx: &Sender<ExitResult>, result: ExitResult) {
