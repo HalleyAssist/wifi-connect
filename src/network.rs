@@ -14,9 +14,11 @@ use config::Config;
 use dnsmasq::start_dnsmasq;
 use server::start_server;
 
+use std::rc::Rc;
+
 #[derive(Clone)]
 struct AP {
-    ap: AccessPoint,
+    ap: Rc<AccessPoint>,
 }
 
 pub enum NetworkCommand {
@@ -462,7 +464,7 @@ fn get_access_points_impl(device: &Device, own_ssid: &str) -> Result<Vec<AP>> {
                 "Access points: {:?}",
                 get_access_points_ssids(&access_points)
             );
-            let ap = access_points.into_iter().map(|x| AP{ap=x}).collect();
+            let ap = access_points.into_iter().map(|x| AP {ap: Rc::new(x)} ).collect();
             return Ok(ap);
         }
 
