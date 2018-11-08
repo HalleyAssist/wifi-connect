@@ -432,9 +432,7 @@ fn get_access_points_impl(device: &Device, own_ssid: String) -> Result<Vec<Acces
     while retries < retries_allowed {
         let mut access_points = wifi_device.get_access_points()?;
 
-        access_points.retain(|ap| ap.ssid().as_str().is_ok());
-
-        access_points = access_points.iter().filter(|ap| ap.ssid().as_str().unwrap() == own_ssid).collect();
+        access_points.retain(|ap| ap.ssid().as_str().is_ok() && ap.ssid().as_str().unwrap() != own_ssid);
 
         if !access_points.is_empty() {
             info!(
