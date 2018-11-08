@@ -88,6 +88,7 @@ impl NetworkCommandHandler {
         if let Some(wifi_device) = device.as_wifi_device() {
             let _ = wifi_device.request_scan();
         }
+        thread::sleep(Duration::from_secs(4));
 
         let (server_tx, server_rx) = channel();
 
@@ -432,6 +433,8 @@ fn get_access_points_impl(device: &Device) -> Result<Vec<AccessPoint>> {
         let mut access_points = wifi_device.get_access_points()?;
 
         access_points.retain(|ap| ap.ssid().as_str().is_ok());
+
+        access_points = access_points.iter().filter(|a| ap.ssid().as_str().unwrap() == ssid).collect()
 
         if !access_points.is_empty() {
             info!(
