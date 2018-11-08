@@ -175,6 +175,7 @@ impl NetworkCommandHandler {
             match command {
                 NetworkCommand::EnableAp => {
                     if self.portal_connection.is_none() {
+                        let wifi_device = self.device.as_wifi_device().unwrap();
                         let _ = wifi_device.request_scan();
                         thread::sleep(Duration::from_secs(4));
 
