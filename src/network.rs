@@ -491,7 +491,7 @@ fn get_networks(access_points: &[AP]) -> Vec<Network> {
         .collect()
 }
 
-fn get_network_info(access_point: &AccessPoint) -> Network {
+fn get_network_info(access_point: std::rc::Rc<network_manager::AccessPoint>) -> Network {
     Network {
         ssid: access_point.ssid().as_str().unwrap().to_string(),
         security: get_network_security(access_point).to_string(),
@@ -512,7 +512,7 @@ fn get_network_security(access_point: &AccessPoint) -> &str {
     }
 }
 
-fn find_access_point<'a>(access_points: &'a [AP], ssid: &str) -> Option<&'a AccessPoint> {
+fn find_access_point<'a>(access_points: &'a [AP], ssid: &str) -> Option<std::rc::Rc<network_manager::AccessPoint>> {
     for access_point in access_points.iter() {
         if let Ok(access_point_ssid) = access_point.ap.ssid().as_str() {
             if access_point_ssid == ssid {
