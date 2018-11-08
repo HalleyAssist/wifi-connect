@@ -282,11 +282,11 @@ impl NetworkCommandHandler {
 
     
     fn get_access_points(&mut self) -> Result<Vec<AccessPoint>> {
-        let new_access_points = get_access_points(&self.device, &self.config.ssid)?;
+        let mut new_access_points = get_access_points(&self.device, &self.config.ssid)?;
 
         for x in &self.access_points {
             let xssid = x.ssid().as_str().unwrap();
-            if let Some(_) = new_access_points.iter().find(|&&xx| xx.ssid().as_str().unwrap() == xssid) {
+            if let Some(_) = new_access_points.iter().find(|ref mut xx| xx.ssid().as_str().unwrap() == xssid) {
                 new_access_points.push(*x)
             }
         }
