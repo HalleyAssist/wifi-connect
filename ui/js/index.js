@@ -1,5 +1,5 @@
 $(function(){
-	var networks = undefined;
+	var networks = undefined, is_manual = false;
 
 	function showHideEnterpriseSettings() {
 		var security = $(this).find(':selected').attr('data-security');
@@ -9,6 +9,28 @@ $(function(){
 			$('#identity-group').hide();
 		}
 	}
+
+	function setManual(toValue){
+		if(toValue){
+			$('#identity-group, #ssid-manual').show();
+			$('#ssid-select').hide();
+		}else{
+			$('#ssid-select').show();
+			$('#ssid-manual').hide();
+			showHideEnterpriseSettings();
+		}
+		is_manual = toValue;
+	}
+
+	$('#btn-ssid-manual').submit(function(ev){
+		setManual(true)
+		ev.preventDefault();
+	})
+
+	$('#btn-ssid-list').submit(function(ev){
+		setManual(false)
+		ev.preventDefault();
+	})
 
 	$('#ssid-select').change(showHideEnterpriseSettings);
 
@@ -32,6 +54,8 @@ $(function(){
 	});
 
 	$('#connect-form').submit(function(ev){
+		$('input[name="ssid"]').val($(is_manual?"#ssid-manual":"#ssid-select").val());
+
 		$.post('connect', $('#connect-form').serialize(), function(data){
 			$('.before-submit').hide();
 			$('#submit-message').removeClass('hidden');
