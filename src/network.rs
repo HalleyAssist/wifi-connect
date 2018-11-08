@@ -85,6 +85,9 @@ impl NetworkCommandHandler {
             dnsmasq = None;
         }
 
+        let wifi_device = device.as_wifi_device().unwrap();
+        let _ = wifi_device.request_scan();
+
         let (server_tx, server_rx) = channel();
 
         Self::spawn_server(config, exit_tx, server_rx, network_tx.clone());
@@ -176,8 +179,9 @@ impl NetworkCommandHandler {
                 NetworkCommand::EnableAp => {
                     if self.portal_connection.is_none() {
                         let wifi_device = self.device.as_wifi_device().unwrap();
-                        let _ = wifi_device.request_scan();
-                        thread::sleep(Duration::from_secs(4));
+                        if let Ok(_) = wifi_device.request_scan()  {
+                            thread::sleep(Duration::from_secs(4));
+                        }
 
                         self.portal_connection = Some(create_portal(&self.device, &self.config)?);
                         self.dnsmasq = Some(start_dnsmasq(&self.config, &self.device)?);
@@ -232,10 +236,12 @@ impl NetworkCommandHandler {
     fn _stop(&mut self) {
         if let Some(ref mut dnsmasq) = self.dnsmasq {
             let _ = dnsmasq.kill();
+            self.dnsmasq = None
         }
 
         if let Some(ref connection) = self.portal_connection {
             let _ = stop_portal_impl(connection, &self.config);
+            self.portal_connection = None
         }
     }
 
@@ -415,6 +421,9 @@ fn get_access_points_impl(device: &Device) -> Result<Vec<AccessPoint>> {
     let mut retries = 0;
 
     let wifi_device = device.as_wifi_device().unwrap();
+    if let Ok(_) = wifi_device.request_scan() {
+        thread::sleep(Duration::from_secs(4));
+    }
 
     // After stopping the hotspot we may have to wait a bit for the list
     // of access points to become available

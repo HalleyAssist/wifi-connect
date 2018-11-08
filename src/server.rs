@@ -233,7 +233,7 @@ fn connect(req: &mut Request) -> IronResult<Response> {
 }
 
 fn enable_ap(req: &mut Request) -> IronResult<Response> {
-    debug!("Incoming `disable_ap` to access point");
+    debug!("Incoming `enable_ap` to access point");
 
     let request_state = get_request_state!(req);
     
