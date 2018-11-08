@@ -328,9 +328,9 @@ impl NetworkCommandHandler {
 
             info!("Connecting to access point '{}'...", ssid);
 
-            let credentials = init_access_point_credentials(access_point, identity, passphrase);
+            let credentials = init_access_point_credentials(&access_point, identity, passphrase);
 
-            match wifi_device.connect(access_point, &credentials) {
+            match wifi_device.connect(&access_point, &credentials) {
                 Ok((connection, state)) => {
                     if state == ConnectionState::Activated {
                         match wait_for_connectivity(&self.manager, 20) {
