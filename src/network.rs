@@ -91,7 +91,7 @@ impl NetworkCommandHandler {
         }
         thread::sleep(Duration::from_secs(4));
 
-        let access_points = Self::get_access_points(device, config.ssid)?;
+        let access_points = get_access_points(&device, &config.ssid)?;
 
         let (server_tx, server_rx) = channel();
 
