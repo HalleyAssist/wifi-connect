@@ -175,6 +175,9 @@ impl NetworkCommandHandler {
             match command {
                 NetworkCommand::EnableAp => {
                     if self.portal_connection.is_none() {
+                        let _ = wifi_device.request_scan();
+                        thread::sleep(Duration::from_secs(4));
+
                         self.portal_connection = Some(create_portal(&self.device, &self.config)?);
                         self.dnsmasq = Some(start_dnsmasq(&self.config, &self.device)?);
                     }
@@ -411,9 +414,6 @@ fn get_access_points_impl(device: &Device) -> Result<Vec<AccessPoint>> {
     let mut retries = 0;
 
     let wifi_device = device.as_wifi_device().unwrap();
-
-    let _ = wifi_device.request_scan();
-    thread::sleep(Duration::from_secs(5));
 
     // After stopping the hotspot we may have to wait a bit for the list
     // of access points to become available

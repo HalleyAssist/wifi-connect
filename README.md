@@ -112,6 +112,7 @@ Endpoints:
  * /networks GET
  * /enable_ap GET
  * /disable_ap GET
+ * /restart_ap GET # also rescans nearby SSIDs
  * /has_connection GET
 
 Support

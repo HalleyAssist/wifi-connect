@@ -154,6 +154,7 @@ pub fn start_server(
     router.post("/connect", connect, "connect");
     router.get("/enable_ap", enable_ap, "enable_ap");
     router.get("/disable_ap", disable_ap, "disable_ap");
+    router.get("/restart_ap", restart_ap, "restart_ap");
     router.get("/current", current, "current");
     router.get("/has_connection", has_connection, "has_connection");
 
@@ -246,7 +247,7 @@ fn enable_ap(req: &mut Request) -> IronResult<Response> {
 }
 
 fn disable_ap(req: &mut Request) -> IronResult<Response> {
-    debug!("Incoming `enable_ap` to access point");
+    debug!("Incoming `disable_ap` to access point");
 
     let request_state = get_request_state!(req);
 
@@ -254,6 +255,26 @@ fn disable_ap(req: &mut Request) -> IronResult<Response> {
 
     if let Err(e) = request_state.network_tx.send(command) {
         exit_with_error(&request_state, e, ErrorKind::SendNetworkCommandDisableAp)
+    } else {
+        Ok(Response::with(status::Ok))
+    }
+}
+
+fn restart_ap(req: &mut Request) -> IronResult<Response> {
+    debug!("Incoming `restart_ap` to access point");
+
+    let request_state = get_request_state!(req);
+
+    let command1 = NetworkCommand::DisableAp {};
+
+    if let Err(e) = request_state.network_tx.send(command1) {
+        exit_with_error(&request_state, e, ErrorKind::SendNetworkCommandDisableAp)
+    }
+    
+    let command = NetworkCommand::EnableAp {};
+
+    if let Err(e) = request_state.network_tx.send(command) {
+        exit_with_error(&request_state, e, ErrorKind::SendNetworkCommandEnableAp)
     } else {
         Ok(Response::with(status::Ok))
     }
