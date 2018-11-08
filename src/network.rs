@@ -85,8 +85,9 @@ impl NetworkCommandHandler {
             dnsmasq = None;
         }
 
-        let wifi_device = device.as_wifi_device().unwrap();
-        let _ = wifi_device.request_scan();
+        if let Some(wifi_device) = device.as_wifi_device() {
+            let _ = wifi_device.request_scan();
+        }
 
         let (server_tx, server_rx) = channel();
 
