@@ -279,7 +279,7 @@ impl NetworkCommandHandler {
     fn activate(&mut self) -> ExitResult {
         self.activated = true;
 
-        let access_points = get_access_points(&self.device, self.config.ssid)?;
+        let access_points = get_access_points(&self.device, &self.config.ssid)?;
         let networks = get_networks(&access_points);
 
         self.server_tx
@@ -296,7 +296,7 @@ impl NetworkCommandHandler {
 
         self.portal_connection = None;
 
-        let access_points = get_access_points(&self.device, self.config.ssid)?;
+        let access_points = get_access_points(&self.device, &self.config.ssid)?;
 
         if let Some(access_point) = find_access_point(&access_points, ssid) {
             let wifi_device = self.device.as_wifi_device().unwrap();
@@ -414,11 +414,11 @@ pub fn find_device(manager: &NetworkManager, interface: &Option<String>) -> Resu
     }
 }
 
-fn get_access_points(device: &Device, own_ssid: String) -> Result<Vec<AccessPoint>> {
+fn get_access_points(device: &Device, own_ssid: &str) -> Result<Vec<AccessPoint>> {
     get_access_points_impl(device, own_ssid).chain_err(|| ErrorKind::NoAccessPoints)
 }
 
-fn get_access_points_impl(device: &Device, own_ssid: String) -> Result<Vec<AccessPoint>> {
+fn get_access_points_impl(device: &Device, own_ssid: &str) -> Result<Vec<AccessPoint>> {
     let retries_allowed = 10;
     let mut retries = 0;
 
