@@ -282,8 +282,9 @@ impl NetworkCommandHandler {
 
     
     fn get_access_points(&mut self) -> Result<Vec<AccessPoint>> {
-        let new_access_points = get_access_points(&self.device, &self.config.ssid)?;
-        return Ok(new_access_points.extend(self.access_points));
+        let mut new_access_points = get_access_points(&self.device, &self.config.ssid)?;
+        new_access_points.extend(self.access_points);
+        return Ok(new_access_points);
     }
 
     fn activate(&mut self) -> ExitResult {
