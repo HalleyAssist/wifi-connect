@@ -480,7 +480,7 @@ fn get_access_points_impl(device: &Device, own_ssid: &str) -> Result<Vec<AP>> {
 fn get_access_points_ssids(access_points: &[AccessPoint]) -> Vec<&str> {
     access_points
         .iter()
-        .map(|ap| ap.ap.ssid().as_str().unwrap())
+        .map(|ap| ap.ssid().as_str().unwrap())
         .collect()
 }
 
@@ -514,9 +514,9 @@ fn get_network_security(access_point: &AccessPoint) -> &str {
 
 fn find_access_point<'a>(access_points: &'a [AP], ssid: &str) -> Option<&'a AccessPoint> {
     for access_point in access_points.iter() {
-        if let Ok(access_point_ssid) = access_point.p.ssid().as_str() {
+        if let Ok(access_point_ssid) = access_point.ap.ssid().as_str() {
             if access_point_ssid == ssid {
-                return Some(access_point);
+                return Some(access_point.ap);
             }
         }
     }
