@@ -14,7 +14,7 @@ use config::Config;
 use dnsmasq::start_dnsmasq;
 use server::start_server;
 
-[derive(Clone)]
+#[derive(Clone)]
 struct AP {
     ap: AccessPoint,
 }
