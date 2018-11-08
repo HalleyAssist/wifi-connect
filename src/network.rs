@@ -487,7 +487,7 @@ fn get_access_points_ssids(access_points: &[AccessPoint]) -> Vec<&str> {
 fn get_networks(access_points: &[AP]) -> Vec<Network> {
     access_points
         .iter()
-        .map(|ap| get_network_info(ap.ap))
+        .map(|ap| get_network_info(ap.ap.clone()))
         .collect()
 }
 
@@ -516,7 +516,7 @@ fn find_access_point<'a>(access_points: &'a [AP], ssid: &str) -> Option<std::rc:
     for access_point in access_points.iter() {
         if let Ok(access_point_ssid) = access_point.ap.ssid().as_str() {
             if access_point_ssid == ssid {
-                return Some(access_point.ap);
+                return Some(access_point.ap.clone());
             }
         }
     }
