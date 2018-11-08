@@ -14,7 +14,10 @@ use config::Config;
 use dnsmasq::start_dnsmasq;
 use server::start_server;
 
-impl Clone for AccessPoint {}
+[derive(Clone)]
+struct AP {
+    AccessPoint ap;
+}
 
 pub enum NetworkCommand {
     EnableAp,
@@ -59,7 +62,7 @@ struct NetworkCommandHandler {
     device: Device,
     portal_connection: Option<Connection>,
     config: Config,
-    access_points: Vec<AccessPoint>,
+    access_points: Vec<AP>,
     dnsmasq: Option<process::Child>,
     server_tx: Sender<NetworkCommandResponse>,
     network_rx: Receiver<NetworkCommand>,
@@ -283,7 +286,7 @@ impl NetworkCommandHandler {
     }
 
     
-    fn get_access_points(&mut self) -> Result<Vec<AccessPoint>> {
+    fn get_access_points(&mut self) -> Result<Vec<AP>> {
         let mut new_access_points = get_access_points(&self.device, &self.config.ssid)?;
 
         for x in &self.access_points {
@@ -434,11 +437,11 @@ pub fn find_device(manager: &NetworkManager, interface: &Option<String>) -> Resu
     }
 }
 
-fn get_access_points(device: &Device, own_ssid: &str) -> Result<Vec<AccessPoint>> {
+fn get_access_points(device: &Device, own_ssid: &str) -> Result<Vec<AP>> {
     get_access_points_impl(device, own_ssid).chain_err(|| ErrorKind::NoAccessPoints)
 }
 
-fn get_access_points_impl(device: &Device, own_ssid: &str) -> Result<Vec<AccessPoint>> {
+fn get_access_points_impl(device: &Device, own_ssid: &str) -> Result<Vec<AP>> {
     let retries_allowed = 10;
     let mut retries = 0;
 
@@ -459,7 +462,8 @@ fn get_access_points_impl(device: &Device, own_ssid: &str) -> Result<Vec<AccessP
                 "Access points: {:?}",
                 get_access_points_ssids(&access_points)
             );
-            return Ok(access_points);
+            let ap = access_points.into_iter().map(|x| AP{ap=x}).collect();
+            return Ok(ap);
         }
 
         retries += 1;
@@ -471,17 +475,17 @@ fn get_access_points_impl(device: &Device, own_ssid: &str) -> Result<Vec<AccessP
     Ok(vec![])
 }
 
-fn get_access_points_ssids(access_points: &[AccessPoint]) -> Vec<&str> {
+fn get_access_points_ssids(access_points: &[AP]) -> Vec<&str> {
     access_points
         .iter()
-        .map(|ap| ap.ssid().as_str().unwrap())
+        .map(|ap| ap.ap.ssid().as_str().unwrap())
         .collect()
 }
 
-fn get_networks(access_points: &[AccessPoint]) -> Vec<Network> {
+fn get_networks(access_points: &[AP]) -> Vec<Network> {
     access_points
         .iter()
-        .map(|ap| get_network_info(ap))
+        .map(|ap| get_network_info(ap.ap))
         .collect()
 }
 
@@ -506,9 +510,9 @@ fn get_network_security(access_point: &AccessPoint) -> &str {
     }
 }
 
-fn find_access_point<'a>(access_points: &'a [AccessPoint], ssid: &str) -> Option<&'a AccessPoint> {
+fn find_access_point<'a>(access_points: &'a [AP], ssid: &str) -> Option<&'a AccessPoint> {
     for access_point in access_points.iter() {
-        if let Ok(access_point_ssid) = access_point.ssid().as_str() {
+        if let Ok(access_point_ssid) = access_point.p.ssid().as_str() {
             if access_point_ssid == ssid {
                 return Some(access_point);
             }
