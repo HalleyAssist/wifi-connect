@@ -85,6 +85,13 @@ impl NetworkCommandHandler {
         let dnsmasq;
         let portal_connection;
 
+        if let Some(wifi_device) = device.as_wifi_device() {
+            let _ = wifi_device.request_scan();
+        }
+        thread::sleep(Duration::from_secs(4));
+
+        let access_points = get_access_points(&device, &config.ssid)?;
+
         if has_connection_defined()? == false {
             portal_connection = Some(create_portal(&device, &config)?);
             dnsmasq = Some(start_dnsmasq(&config, &device)?);
@@ -92,13 +99,6 @@ impl NetworkCommandHandler {
             portal_connection = None;
             dnsmasq = None;
         }
-
-        if let Some(wifi_device) = device.as_wifi_device() {
-            let _ = wifi_device.request_scan();
-        }
-        thread::sleep(Duration::from_secs(4));
-
-        let access_points = get_access_points(&device, &config.ssid)?;
 
         let (server_tx, server_rx) = channel();
 
