@@ -12,11 +12,11 @@ $(function(){
 
 	function setManual(toValue){
 		if(toValue){
-			$('#identity-group, #ssid-manual, #btn-ssid-manual').show();
-			$('#ssid-select, #btn-ssid-list').hide();
+			$('#identity-group, #ssid-manual, #btn-ssid-list').show();
+			$('#ssid-select, #btn-ssid-manual').hide();
 		}else{
-			$('#ssid-select, #btn-ssid-list').show();
-			$('#ssid-manual, #btn-ssid-manual').hide();
+			$('#ssid-select, #btn-ssid-manual').show();
+			$('#ssid-manual, #btn-ssid-list').hide();
 			showHideEnterpriseSettings();
 		}
 		is_manual = toValue;
