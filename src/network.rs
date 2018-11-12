@@ -444,12 +444,12 @@ fn get_access_points(device: &Device, own_ssid: &str) -> Result<Vec<AP>> {
 }
 
 fn get_access_points_impl(device: &Device, own_ssid: &str) -> Result<Vec<AP>> {
-    let retries_allowed = 10;
+    let retries_allowed = 5;
     let mut retries = 0;
 
     let wifi_device = device.as_wifi_device().unwrap();
     if let Ok(_) = wifi_device.request_scan() {
-        thread::sleep(Duration::from_secs(4));
+        thread::sleep(Duration::from_secs(3));
     }
 
     // After stopping the hotspot we may have to wait a bit for the list
