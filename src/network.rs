@@ -293,7 +293,7 @@ impl NetworkCommandHandler {
 
         for x in &self.access_points {
             let xssid = x.ap.ssid().as_str().unwrap();
-            if let Some(_) = new_access_points.iter().find(|xx| xx.ap.ssid().as_str().unwrap() == xssid) {
+            if new_access_points.iter().find(|xx| xx.ap.ssid().as_str().unwrap() == xssid).is_none()  {
                 new_access_points.push((*x).clone());
             }
         }
