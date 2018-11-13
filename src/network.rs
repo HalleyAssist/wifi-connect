@@ -85,6 +85,13 @@ impl NetworkCommandHandler {
         let dnsmasq;
         let portal_connection;
 
+        if let Some(wifi_device) = device.as_wifi_device() {
+            let _ = wifi_device.request_scan();
+        }
+        thread::sleep(Duration::from_secs(4));
+
+        let access_points = get_access_points(&device, &config.ssid)?;
+
         if has_connection_defined()? == false {
             portal_connection = Some(create_portal(&device, &config)?);
             dnsmasq = Some(start_dnsmasq(&config, &device)?);
@@ -92,13 +99,6 @@ impl NetworkCommandHandler {
             portal_connection = None;
             dnsmasq = None;
         }
-
-        if let Some(wifi_device) = device.as_wifi_device() {
-            let _ = wifi_device.request_scan();
-        }
-        thread::sleep(Duration::from_secs(4));
-
-        let access_points = get_access_points(&device, &config.ssid)?;
 
         let (server_tx, server_rx) = channel();
 
@@ -293,7 +293,7 @@ impl NetworkCommandHandler {
 
         for x in &self.access_points {
             let xssid = x.ap.ssid().as_str().unwrap();
-            if let Some(_) = new_access_points.iter().find(|xx| xx.ap.ssid().as_str().unwrap() == xssid) {
+            if new_access_points.iter().find(|xx| xx.ap.ssid().as_str().unwrap() == xssid).is_none()  {
                 new_access_points.push((*x).clone());
             }
         }
@@ -444,12 +444,12 @@ fn get_access_points(device: &Device, own_ssid: &str) -> Result<Vec<AP>> {
 }
 
 fn get_access_points_impl(device: &Device, own_ssid: &str) -> Result<Vec<AP>> {
-    let retries_allowed = 10;
+    let retries_allowed = 5;
     let mut retries = 0;
 
     let wifi_device = device.as_wifi_device().unwrap();
     if let Ok(_) = wifi_device.request_scan() {
-        thread::sleep(Duration::from_secs(4));
+        thread::sleep(Duration::from_secs(3));
     }
 
     // After stopping the hotspot we may have to wait a bit for the list
