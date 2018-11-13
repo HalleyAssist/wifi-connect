@@ -66,7 +66,7 @@ fn run() -> Result<()> {
 
     logger::init();
 
-    let config = get_config();
+    let config = get_config()?;
 
     require_root()?;
 

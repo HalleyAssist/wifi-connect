@@ -25,7 +25,7 @@ pub struct Config {
     pub ui_directory: PathBuf,
 }
 
-pub fn get_config() -> Config {
+pub fn get_config() -> Result<Config> {
     let matches = App::new(crate_name!())
         .version(crate_version!())
         .author(crate_authors!())
@@ -113,9 +113,9 @@ pub fn get_config() -> Config {
         |v| Some(v.to_string()),
     );
 
-    let ssid: String = format!("HalleyHub-{}", &env::var("BALENA_DEVICE_UUID").ok().unwrap()[0..12]);
+    let ssid: String = format!("HalleyHub-{}", &env::var("BALENA_DEVICE_UUID")?[0..12]);
 
-    let passphrase: Option<String> = Some(env::var("PAIRING_CODE").ok().unwrap().pad(8, '_', Alignment::Right, false));
+    let passphrase: Option<String> = Some(env::var("PAIRING_CODE")?.pad(8, '_', Alignment::Right, false));
 
     let gateway = Ipv4Addr::from_str(&matches.value_of("portal-gateway").map_or_else(
         || env::var("PORTAL_GATEWAY").unwrap_or_else(|_| DEFAULT_GATEWAY.to_string()),
@@ -144,7 +144,7 @@ pub fn get_config() -> Config {
 
     let ui_directory = get_ui_directory(matches.value_of("ui-directory"));
 
-    Config {
+    Ok(Config {
         interface: interface,
         ssid: ssid,
         passphrase: passphrase,
@@ -153,7 +153,7 @@ pub fn get_config() -> Config {
         listening_at: listening_at,
         activity_timeout: activity_timeout,
         ui_directory: ui_directory,
-    }
+    })
 }
 
 fn get_ui_directory(cmd_ui_directory: Option<&str>) -> PathBuf {
