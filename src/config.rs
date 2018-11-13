@@ -123,9 +123,9 @@ pub fn get_config() -> Result<Config> {
         |v| Some(v.to_string()),
     );
 
-    let ssid: String = format!("HalleyHub-{}", &env::var("BALENA_DEVICE_UUID")?[0..12]);
+    let ssid: String = format!("HalleyHub-{}", &env::var("BALENA_DEVICE_UUID").chain_err(|| "something went wrong")?[0..12]);
 
-    let passphrase: Option<String> = Some(env::var("PAIRING_CODE")?.pad(8, '_', Alignment::Right, false));
+    let passphrase: Option<String> = Some(env::var("PAIRING_CODE").chain_err(|| "something went wrong")?.pad(8, '_', Alignment::Right, false));
 
     let gateway = Ipv4Addr::from_str(&matches.value_of("portal-gateway").map_or_else(
         || env::var("PORTAL_GATEWAY").unwrap_or_else(|_| DEFAULT_GATEWAY.to_string()),
