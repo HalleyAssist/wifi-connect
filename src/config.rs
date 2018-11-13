@@ -30,7 +30,7 @@ pub struct Config {
 
 impl convert::From<env::VarError> for Error {
     fn from(err: env::VarError) -> Error {
-        err as Error
+        Err(err)
     }
 }
 
