@@ -115,14 +115,14 @@ pub fn get_config() -> Result<Config> {
         |v| Some(v.to_string()),
     );
 
-    let ssidSuffix: String
+    let ssidSuffix: String;
     if let Ok(ssidResult) = &env::var("BALENA_DEVICE_UUID") {
         ssidSuffix = ssidResult[0..12]
     } else {
         ssidSuffix = &env::var("RESIN_DEVICE_UUID").chain_err(|| "something went wrong")?[0..12];
 
     }
-    let ssid = format!("HalleyHub-{}", ssidSuffix)
+    let ssid = format!("HalleyHub-{}", ssidSuffix);
 
     let passphrase: Option<String> = Some(env::var("PAIRING_CODE").chain_err(|| "something went wrong")?.pad(8, '_', Alignment::Right, false));
 
