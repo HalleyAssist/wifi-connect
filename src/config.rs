@@ -6,6 +6,7 @@ use std::net::Ipv4Addr;
 use std::path::PathBuf;
 use std::ffi::OsStr;
 use errors::*;
+use std::str::FromStr;
 
 const DEFAULT_GATEWAY: &str = "192.168.42.1";
 const DEFAULT_DHCP_RANGE: &str = "192.168.42.2,192.168.42.254";
