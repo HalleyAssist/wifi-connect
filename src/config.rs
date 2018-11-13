@@ -28,7 +28,14 @@ pub struct Config {
     pub ui_directory: PathBuf,
 }
 
-pub fn get_config() -> Result<Config, env::VarError> {
+impl convert::From<env::VarError> for Error {
+    fn from(err: env::VarError) -> Error {
+        Error(err.description())
+    }
+}
+
+
+pub fn get_config() -> Result<Config> {
     let matches = App::new(crate_name!())
         .version(crate_version!())
         .author(crate_authors!())
