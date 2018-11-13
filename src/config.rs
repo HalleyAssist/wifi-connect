@@ -3,7 +3,6 @@ use pad::{PadStr, Alignment};
 
 use std::env;
 use std::net::Ipv4Addr;
-use std::str::FromStr;
 use std::path::PathBuf;
 use std::ffi::OsStr;
 use errors::*;
@@ -117,9 +116,9 @@ pub fn get_config() -> Result<Config> {
 
     let ssidSuffix: String;
     if let Ok(ssidResult) = &env::var("BALENA_DEVICE_UUID") {
-        ssidSuffix = ssidResult[0..12]
+        ssidSuffix = ssidResult[0..12].to_string()
     } else {
-        ssidSuffix = &env::var("RESIN_DEVICE_UUID").chain_err(|| "something went wrong")?[0..12];
+        ssidSuffix = env::var("RESIN_DEVICE_UUID").chain_err(|| "something went wrong")?[0..12].to_string();
 
     }
     let ssid = format!("HalleyHub-{}", ssidSuffix);
