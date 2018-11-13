@@ -8,6 +8,8 @@ use std::path::PathBuf;
 use std::ffi::OsStr;
 use errors::*;
 
+use std::convert;
+
 const DEFAULT_GATEWAY: &str = "192.168.42.1";
 const DEFAULT_DHCP_RANGE: &str = "192.168.42.2,192.168.42.254";
 const DEFAULT_ACTIVITY_TIMEOUT: &str = "0";
@@ -25,6 +27,13 @@ pub struct Config {
     pub activity_timeout: u64,
     pub ui_directory: PathBuf,
 }
+
+impl convert::From<env::VarError> for Error {
+    fn from(err: env::VarError) -> Error {
+        Error::Error(err)
+    }
+}
+
 
 pub fn get_config() -> Result<Config> {
     let matches = App::new(crate_name!())
