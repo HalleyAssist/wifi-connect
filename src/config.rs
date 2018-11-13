@@ -25,7 +25,7 @@ pub struct Config {
     pub ui_directory: PathBuf,
 }
 
-pub fn get_config() -> Result<Config> {
+pub fn get_config() -> Result<Config, Error> {
     let matches = App::new(crate_name!())
         .version(crate_version!())
         .author(crate_authors!())
