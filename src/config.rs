@@ -120,8 +120,8 @@ pub fn get_config() -> Result<Config> {
         ssidSuffix = ssidResult[0..12].to_string()
     } else {
         ssidSuffix = env::var("RESIN_DEVICE_UUID").chain_err(|| "unable to find UUID")?[0..12].to_string();
-
     }
+    
     let ssid = format!("HalleyHub-{}", ssidSuffix);
 
     let passphrase: Option<String> = Some(env::var("PAIRING_CODE").chain_err(|| "unable to find pairing code")?.pad(8, '_', Alignment::Right, false));
