@@ -119,12 +119,12 @@ pub fn get_config() -> Result<Config> {
     if let Ok(ssidResult) = &env::var("BALENA_DEVICE_UUID") {
         ssidSuffix = ssidResult[0..12].to_string()
     } else {
-        ssidSuffix = env::var("RESIN_DEVICE_UUID").chain_err(|| "something went wrong")?[0..12].to_string();
+        ssidSuffix = env::var("RESIN_DEVICE_UUID").chain_err(|| "unable to find UUID")?[0..12].to_string();
 
     }
     let ssid = format!("HalleyHub-{}", ssidSuffix);
 
-    let passphrase: Option<String> = Some(env::var("PAIRING_CODE").chain_err(|| "something went wrong")?.pad(8, '_', Alignment::Right, false));
+    let passphrase: Option<String> = Some(env::var("PAIRING_CODE").chain_err(|| "unable to find pairing code")?.pad(8, '_', Alignment::Right, false));
 
     let gateway = Ipv4Addr::from_str(&matches.value_of("portal-gateway").map_or_else(
         || env::var("PORTAL_GATEWAY").unwrap_or_else(|_| DEFAULT_GATEWAY.to_string()),
