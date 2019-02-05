@@ -115,6 +115,9 @@ Endpoints:
  * /restart_ap GET # also rescans nearby SSIDs
  * /has_connection GET
 
+By default the pairing code is used for the passphrase, padded with "_" at the start of the string to the minimum of 8 characters.
+
+
 Support
 -------
 
