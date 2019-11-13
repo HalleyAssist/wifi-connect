@@ -14,7 +14,6 @@ extern crate clap;
 
 extern crate env_logger;
 extern crate iron;
-extern crate iron_cors;
 extern crate network_manager;
 extern crate nix;
 extern crate params;

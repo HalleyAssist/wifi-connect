@@ -8,8 +8,6 @@ use path::PathBuf;
 use iron::prelude::*;
 use iron::{headers, status, typemap, AfterMiddleware, Iron, IronError, IronResult, Request,
            Response, Url};
-use iron::modifiers::Redirect;
-use iron_cors::CorsMiddleware;
 use router::Router;
 use persistent::Write;
 use params::{FromValue, Params};
@@ -110,33 +108,12 @@ where
     ))
 }
 
-struct RedirectMiddleware;
-
-impl AfterMiddleware for RedirectMiddleware {
-    fn catch(&self, req: &mut Request, err: IronError) -> IronResult<Response> {
-        let gateway = {
-            let request_state = get_request_state!(req);
-            format!("{}", request_state.gateway)
-        };
-
-        if let Some(host) = req.headers.get::<headers::Host>() {
-            if host.hostname != gateway {
-                let url = Url::parse(&format!("http://{}/", gateway)).unwrap();
-                return Ok(Response::with((status::Found, Redirect(url))));
-            }
-        }
-
-        Err(err)
-    }
-}
-
 pub fn start_server(
     gateway: Ipv4Addr,
     address: String,
     server_rx: Receiver<NetworkCommandResponse>,
     network_tx: Sender<NetworkCommand>,
-    exit_tx: Sender<ExitResult>,
-    ui_directory: &PathBuf,
+    exit_tx: Sender<ExitResult>
 ) {
     let exit_tx_clone = exit_tx.clone();
     let request_state = RequestSharedState {
@@ -155,12 +132,9 @@ pub fn start_server(
     router.get("/current", current, "current");
     router.get("/has_connection", has_connection, "has_connection");
 
-    let cors_middleware = CorsMiddleware::with_allow_any();
 
     let mut chain = Chain::new(router);
     chain.link(Write::<RequestSharedState>::both(request_state));
-    chain.link_after(RedirectMiddleware);
-    chain.link_around(cors_middleware);
 
     info!("Starting HTTP server on {}", &address);
 
