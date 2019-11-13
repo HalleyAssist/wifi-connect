@@ -15,14 +15,12 @@ extern crate clap;
 extern crate env_logger;
 extern crate iron;
 extern crate iron_cors;
-extern crate mount;
 extern crate network_manager;
 extern crate nix;
 extern crate params;
 extern crate persistent;
 extern crate router;
 extern crate serde_json;
-extern crate staticfile;
 extern crate pad;
 
 mod errors;

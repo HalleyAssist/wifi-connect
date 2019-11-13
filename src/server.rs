@@ -11,8 +11,6 @@ use iron::{headers, status, typemap, AfterMiddleware, Iron, IronError, IronResul
 use iron::modifiers::Redirect;
 use iron_cors::CorsMiddleware;
 use router::Router;
-use staticfile::Static;
-use mount::Mount;
 use persistent::Write;
 use params::{FromValue, Params};
 
@@ -149,7 +147,6 @@ pub fn start_server(
     };
 
     let mut router = Router::new();
-    router.get("/", Static::new(ui_directory), "index");
     router.get("/networks", networks, "networks");
     router.post("/connect", connect, "connect");
     router.get("/enable_ap", enable_ap, "enable_ap");
@@ -158,15 +155,9 @@ pub fn start_server(
     router.get("/current", current, "current");
     router.get("/has_connection", has_connection, "has_connection");
 
-    let mut assets = Mount::new();
-    assets.mount("/", router);
-    assets.mount("/css", Static::new(&ui_directory.join("css")));
-    assets.mount("/img", Static::new(&ui_directory.join("img")));
-    assets.mount("/js", Static::new(&ui_directory.join("js")));
-
     let cors_middleware = CorsMiddleware::with_allow_any();
 
-    let mut chain = Chain::new(assets);
+    let mut chain = Chain::new(router);
     chain.link(Write::<RequestSharedState>::both(request_state));
     chain.link_after(RedirectMiddleware);
     chain.link_around(cors_middleware);
