@@ -4,7 +4,6 @@ use std::net::Ipv4Addr;
 use std::error::Error as StdError;
 
 use serde_json;
-use path::PathBuf;
 use iron::prelude::*;
 use iron::{headers, status, typemap, AfterMiddleware, Iron, IronError, IronResult, Request,
            Response, Url};

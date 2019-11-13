@@ -3,8 +3,6 @@ use pad::{PadStr, Alignment};
 
 use std::env;
 use std::net::Ipv4Addr;
-use std::path::PathBuf;
-use std::ffi::OsStr;
 use errors::*;
 use std::str::FromStr;
 
