@@ -164,7 +164,7 @@ pub fn start_server(
 
     info!("Starting HTTP server on {}", &address);
 
-    if let Err(e) = Iron::new(chain).http(&address) {
+    if let Err(e) = (Iron { handler: chain, threads: 1,  timeouts: iron::Timeouts::default() }).http(&address) {
         exit(
             &exit_tx_clone,
             ErrorKind::StartHTTPServer(address, e.description().into()).into(),
