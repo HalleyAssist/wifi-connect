@@ -95,10 +95,11 @@ pub fn get_config() -> Result<Config> {
                 .help("Exit if no activity for the specified time (seconds) (default: none)")
                 .takes_value(true),
         )
+        .get_matches();
 
     let interface: Option<String> = matches.value_of("portal-interface").map_or_else(
         || env::var("PORTAL_INTERFACE").ok(),
-        |v| Some(v.to_string()),
+        |v| Some(v.to_string())
     );
 
     let ssidSuffix: String;
