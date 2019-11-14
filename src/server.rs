@@ -1,6 +1,5 @@
 use std::sync::mpsc::{Receiver, Sender};
 use std::fmt;
-use std::net::Ipv4Addr;
 use std::error::Error as StdError;
 
 use serde_json;
@@ -107,7 +106,6 @@ where
 }
 
 pub fn start_server(
-    gateway: Ipv4Addr,
     address: String,
     server_rx: Receiver<NetworkCommandResponse>,
     network_tx: Sender<NetworkCommand>,
@@ -115,7 +113,6 @@ pub fn start_server(
 ) {
     let exit_tx_clone = exit_tx.clone();
     let request_state = RequestSharedState {
-        gateway: gateway,
         server_rx: server_rx,
         network_tx: network_tx,
         exit_tx: exit_tx,

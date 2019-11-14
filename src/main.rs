@@ -31,7 +31,6 @@ mod logger;
 mod exit;
 mod privileges;
 
-use std::path;
 use std::thread;
 use std::sync::mpsc::channel;
 use std::io::Write;
