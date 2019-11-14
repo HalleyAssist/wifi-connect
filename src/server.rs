@@ -16,7 +16,6 @@ use network::{NetworkCommand, NetworkCommandResponse};
 use exit::{exit, ExitResult};
 
 struct RequestSharedState {
-    gateway: Ipv4Addr,
     server_rx: Receiver<NetworkCommandResponse>,
     network_tx: Sender<NetworkCommand>,
     exit_tx: Sender<ExitResult>,
